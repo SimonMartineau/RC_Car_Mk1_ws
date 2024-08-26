@@ -29,6 +29,27 @@ def generate_launch_description():
         parameters=[params]
     )
 
+    # Rviz configuration
+    rviz_config_file = os.path.join(
+        get_package_share_directory('rc_car_bringup'), 'rviz', 'view_bot.rviz'
+    )
+    node_rviz = Node(
+        package='rviz2',
+        executable='rviz2',
+        name='rviz2',
+        output='screen',
+        arguments=['-d', rviz_config_file],
+        parameters=[{'use_sim_time': use_sim_time}]
+    )
+
+    # Joint_state_publisher_gui
+    node_state_publisher_gui = Node(
+        package='joint_state_publisher_gui',
+        executable='joint_state_publisher_gui',
+        name='joint_state_publisher_gui',
+        output='screen',
+        parameters=[{'use_sim_time': use_sim_time}]
+    )
 
     # Launch!
     return LaunchDescription([
@@ -37,5 +58,7 @@ def generate_launch_description():
             default_value='false',
             description='Use sim time if true'),
 
-        node_robot_state_publisher
+        node_robot_state_publisher,
+        node_rviz,
+        node_state_publisher_gui
     ])
